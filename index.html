@@ -1,9 +1,1257 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
   <head>
-    <title>Hello, world!</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ProTanki Texture Swapper</title>
+    <meta
+      name="description"
+      content="Client-side texture, skin, paint, and WebGL2 shader manager for ProTanki. Now supporting both HTML5 and Flash clients with real-time weather, wet reflections, and 3D animated skins."
+    />
+    <meta property="og:title" content="ProTanki Texture Swapper v4.0" />
+    <meta
+      property="og:description"
+      content="Transform ProTanki on HTML5 &amp; Flash: Tanki X &amp; XT HD skins, Animated paints and skins, WebGL2 shaders, dynamic rain &amp; snow, and 3D skin animations."
+    />
+    <meta property="og:type" content="website" />
+    <link rel="icon" type="image/png" href="assets/logo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <h1>Hello, world!</h1>
+    <div class="bg-grid" aria-hidden="true"></div>
+    <div class="bg-glow bg-glow-1" aria-hidden="true"></div>
+    <div class="bg-glow bg-glow-2" aria-hidden="true"></div>
+
+    <header class="navbar" id="navbar">
+      <div class="container nav-inner">
+        <a href="#top" class="brand">
+          <img
+            src="assets/logo.png"
+            alt="Texture Swapper Logo"
+            class="brand-logo"
+          />
+          <span class="brand-name">TextureSwapper</span>
+          <span class="version-pill" id="nav-version">v4.0</span>
+        </a>
+
+        <nav class="nav-links" aria-label="Main navigation">
+          <a href="#whats-new" data-i18n="nav.whatsNew">v4.0 Update</a>
+          <a href="#protanki-pack" data-i18n="nav.protankiPack"
+            >ProTanki Pack</a
+          >
+          <a href="#app-showcase" data-i18n="nav.appUi">App UI</a>
+          <a href="#how-it-works" data-i18n="nav.howItWorks">How It Works</a>
+          <a href="#pricing" data-i18n="nav.pricing">Premium</a>
+          <a href="#faq" data-i18n="nav.faq">FAQ</a>
+        </nav>
+
+        <div class="nav-actions">
+          <div class="lang-dropdown" id="lang-dropdown">
+            <button
+              type="button"
+              class="lang-trigger"
+              id="lang-trigger"
+              aria-haspopup="listbox"
+              aria-expanded="false"
+              aria-label="Select language"
+            >
+              <span
+                class="lang-flag"
+                id="lang-current-flag"
+                aria-hidden="true"
+              ></span>
+              <svg
+                class="lang-caret"
+                width="10"
+                height="10"
+                viewBox="0 0 10 10"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path d="M2 3.5L5 7l3-3.5H2z" />
+              </svg>
+            </button>
+            <div
+              class="lang-menu"
+              id="lang-menu"
+              role="listbox"
+              aria-label="Language"
+            >
+              <button
+                type="button"
+                class="lang-option active"
+                data-lang="en"
+                role="option"
+                aria-selected="true"
+              >
+                <span class="lang-flag" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="20" height="20">
+                    <clipPath id="flag-us-opt">
+                      <circle cx="12" cy="12" r="12" />
+                    </clipPath>
+                    <g clip-path="url(#flag-us-opt)">
+                      <rect width="24" height="24" fill="#b22234" />
+                      <path
+                        d="M0 3.7h24M0 7.4h24M0 11.1h24M0 14.8h24M0 18.5h24M0 22.2h24"
+                        stroke="#fff"
+                        stroke-width="1.85"
+                      />
+                      <rect width="11.5" height="13" fill="#3c3b6e" />
+                      <g fill="#fff">
+                        <circle cx="2.3" cy="2.3" r="0.7" />
+                        <circle cx="5.7" cy="2.3" r="0.7" />
+                        <circle cx="9.1" cy="2.3" r="0.7" />
+                        <circle cx="4" cy="4.6" r="0.7" />
+                        <circle cx="7.4" cy="4.6" r="0.7" />
+                        <circle cx="2.3" cy="6.9" r="0.7" />
+                        <circle cx="5.7" cy="6.9" r="0.7" />
+                        <circle cx="9.1" cy="6.9" r="0.7" />
+                        <circle cx="4" cy="9.2" r="0.7" />
+                        <circle cx="7.4" cy="9.2" r="0.7" />
+                        <circle cx="2.3" cy="11.5" r="0.7" />
+                        <circle cx="5.7" cy="11.5" r="0.7" />
+                        <circle cx="9.1" cy="11.5" r="0.7" />
+                      </g>
+                    </g>
+                  </svg>
+                </span>
+                <span>EN</span>
+              </button>
+              <button
+                type="button"
+                class="lang-option"
+                data-lang="uk"
+                role="option"
+                aria-selected="false"
+              >
+                <span class="lang-flag" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="20" height="20">
+                    <clipPath id="flag-ua-opt">
+                      <circle cx="12" cy="12" r="12" />
+                    </clipPath>
+                    <g clip-path="url(#flag-ua-opt)">
+                      <rect width="24" height="12" y="0" fill="#0057b7" />
+                      <rect width="24" height="12" y="12" fill="#ffd700" />
+                    </g>
+                  </svg>
+                </span>
+                <span>UA</span>
+              </button>
+              <button
+                type="button"
+                class="lang-option"
+                data-lang="ru"
+                role="option"
+                aria-selected="false"
+              >
+                <span class="lang-flag" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="20" height="20">
+                    <clipPath id="flag-ru-opt">
+                      <circle cx="12" cy="12" r="12" />
+                    </clipPath>
+                    <g clip-path="url(#flag-ru-opt)">
+                      <rect width="24" height="8" y="0" fill="#ffffff" />
+                      <rect width="24" height="8" y="8" fill="#0039a6" />
+                      <rect width="24" height="8" y="16" fill="#d52b1e" />
+                    </g>
+                  </svg>
+                </span>
+                <span>RU</span>
+              </button>
+            </div>
+          </div>
+          <button
+            class="menu-toggle"
+            id="menu-toggle"
+            aria-label="Toggle menu"
+            aria-expanded="false"
+          >
+            <span></span><span></span><span></span>
+          </button>
+        </div>
+      </div>
+
+      <div class="mobile-menu" id="mobile-menu">
+        <a href="#whats-new" data-i18n="nav.whatsNew">v4.0 Update</a>
+        <a href="#protanki-pack" data-i18n="nav.protankiPack">ProTanki Pack</a>
+        <a href="#app-showcase" data-i18n="nav.appUi">App UI</a>
+        <a href="#how-it-works" data-i18n="nav.howItWorks">How It Works</a>
+        <a href="#pricing" data-i18n="nav.pricing">Premium</a>
+        <a href="#faq" data-i18n="nav.faq">FAQ</a>
+        <div class="mobile-menu-actions">
+          <a
+            href="https://discord.gg/3Bgs7Jd9xk"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn btn-ghost"
+            data-i18n="nav.joinDiscord"
+            >Join Discord</a
+          >
+          <a
+            href="https://github.com/Gabriel250903/ProTankiTextureSwapper/releases/latest"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn btn-primary js-download-link"
+            data-i18n="nav.download"
+            >Download v4.0</a
+          >
+        </div>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="container hero-grid">
+          <div class="hero-content reveal">
+            <div class="hero-badges">
+              <span class="badge badge-blue" data-i18n="hero.badgeNew"
+                >NEW IN v4.0</span
+              >
+              <span class="badge badge-cyan" data-i18n="hero.badgeClients"
+                >HTML5 + Flash Client Support</span
+              >
+            </div>
+            <h1 data-i18n-html="hero.titleHtml">
+              Transform ProTanki.<br />
+              <span class="gradient-text">Skins, Paints &amp; Shaders.</span>
+            </h1>
+            <p class="hero-subtitle" data-i18n-html="hero.subtitleHtml">
+              A client-side texture and visual overhaul manager for ProTanki.
+              Choose from dozens of skins, equip
+              <strong>Animated paints</strong>, and unlock
+              <strong
+                >WebGL2 shaders, dynamic weather, 3D skin animations
+              </strong>
+              and a lot more features on HTML5.
+            </p>
+
+            <div class="hero-cta">
+              <a
+                href="https://github.com/Gabriel250903/ProTankiTextureSwapper/releases/latest"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="btn btn-primary btn-lg js-download-link"
+                id="hero-download-btn"
+              >
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+                <span data-i18n="hero.downloadBtn"
+                  >Download v4.0 Installer</span
+                >
+              </a>
+              <a
+                href="https://discord.gg/3Bgs7Jd9xk"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="btn btn-secondary btn-lg"
+                data-i18n="hero.discordBtn"
+              >
+                Join Discord Community
+              </a>
+            </div>
+
+            <div class="hero-meta">
+              <span data-i18n="hero.metaWin">Windows 10 / 11 (64-bit)</span>
+              <span class="dot">•</span>
+              <span data-i18n="hero.metaNet">.NET 8.0 Desktop Runtime</span>
+              <span class="dot">•</span>
+              <span data-i18n="hero.metaSafe"
+                >100% Client-Side &amp; Reversible</span
+              >
+            </div>
+          </div>
+
+          <div class="hero-visual reveal">
+            <div class="window-frame">
+              <div class="window-chrome">
+                <span class="chrome-dot red"></span>
+                <span class="chrome-dot yellow"></span>
+                <span class="chrome-dot green"></span>
+                <span class="chrome-title"
+                  >ProTanki Texture Swapper — v4.0</span
+                >
+              </div>
+              <img
+                src="assets/screenshots/app-hulls.jpg"
+                alt="ProTanki Texture Swapper v4.0 Hulls View"
+                class="hero-screenshot js-lightbox-trigger"
+                data-caption="Texture Swapper v4.0 - Hulls Browser featuring Tanki X, XT HD, DC skins and a lot more."
+                data-i18n-caption="hero.screenshotCaption"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="whats-new">
+        <div class="container">
+          <div class="section-header reveal">
+            <span class="section-kicker" data-i18n="whatsNew.kicker"
+              >RELEASE v4.0</span
+            >
+            <h2 data-i18n="whatsNew.title">
+              Everything New in Texture Swapper 4.0
+            </h2>
+            <p data-i18n="whatsNew.subtitle">
+              Built from the ground up to support the modern HTML5 client
+              alongside classic Flash, packed with next-gen visuals and new skin
+              collections.
+            </p>
+          </div>
+
+          <div class="bento-grid">
+            <article class="bento-card bento-wide reveal">
+              <div class="bento-icon icon-blue">
+                <svg
+                  width="22"
+                  height="22"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="2" y="3" width="20" height="14" rx="2" />
+                  <line x1="8" y1="21" x2="16" y2="21" />
+                  <line x1="12" y1="17" x2="12" y2="21" />
+                </svg>
+              </div>
+              <div class="bento-tag" data-i18n="whatsNew.card1Tag">
+                CORE UPGRADE
+              </div>
+              <h3 data-i18n="whatsNew.card1Title">
+                Both clients: HTML5 &amp; Flash
+              </h3>
+              <p data-i18n-html="whatsNew.card1DescHtml">
+                Switch seamlessly between the
+                <strong>HTML5 client</strong> and the
+                <strong>Flash</strong>
+                client. Auto-detects your cache directory and keeps clean
+                backups for both.
+              </p>
+            </article>
+
+            <article class="bento-card reveal">
+              <div class="bento-icon icon-cyan">
+                <svg
+                  width="22"
+                  height="22"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M12 2v4" />
+                  <path d="m16.2 7.8 2.9-2.9" />
+                  <path d="M18 12h4" />
+                  <path d="m16.2 16.2 2.9 2.9" />
+                  <path d="M12 18v4" />
+                  <path d="m4.9 19.1 2.9-2.9" />
+                  <path d="M2 12h4" />
+                  <path d="m4.9 4.9 2.9 2.9" />
+                </svg>
+              </div>
+              <div class="bento-tag" data-i18n="whatsNew.card2Tag">
+                HTML5 EXCLUSIVE
+              </div>
+              <h3 data-i18n="whatsNew.card2Title">ProTanki Pack</h3>
+              <p data-i18n-html="whatsNew.card2DescHtml">
+                Inject real-time Bloom, Depth of Field, Color Grading, Sun Rays,
+                Rain &amp; Snow, puddle reflections, tank tracks, and skyboxes.
+                It can be toggled in-game via
+                <code>F8</code> which is the default keybind for the ProTanki
+                Pack.
+              </p>
+            </article>
+
+            <article class="bento-card reveal">
+              <div class="bento-icon icon-purple">
+                <svg
+                  width="22"
+                  height="22"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"
+                  />
+                </svg>
+              </div>
+              <div class="bento-tag" data-i18n="whatsNew.card3Tag">
+                ANIMATED MODELS
+              </div>
+              <h3 data-i18n="whatsNew.card3Title">3D Skin Animations</h3>
+              <p data-i18n-html="whatsNew.card3DescHtml">
+                Bring turrets like <strong>Isida Demonic</strong> and
+                <strong>Hammer IC</strong> to life with moving 3D parts,
+                animated barrels, and gears.
+              </p>
+            </article>
+
+            <article class="bento-card reveal">
+              <div class="bento-icon icon-amber">
+                <svg
+                  width="22"
+                  height="22"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polygon
+                    points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                  />
+                </svg>
+              </div>
+              <div class="bento-tag" data-i18n="whatsNew.card4Tag">
+                NEW COLLECTION
+              </div>
+              <h3 data-i18n="whatsNew.card4Title">More Animated Paints</h3>
+              <p data-i18n-html="whatsNew.card4DescHtml">
+                12+ brand-new <strong>Animated Paints</strong> located in
+                <strong>Noizy Paints</strong> folder.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-alt" id="protanki-pack">
+        <div class="container">
+          <div class="section-header reveal">
+            <span class="section-kicker" data-i18n="compare.kicker"
+              >INTERACTIVE COMPARISON</span
+            >
+            <h2 data-i18n="compare.title">See the ProTanki Pack Difference</h2>
+            <p data-i18n="compare.subtitle">
+              Drag the slider below to compare Vanilla HTML5 against real-time
+              WebGL2 shaders, dynamic rain with wet puddle reflections, winter
+              snow, and sunny god rays.
+            </p>
+          </div>
+
+          <div
+            class="compare-controls reveal"
+            role="tablist"
+            aria-label="Shader comparison presets"
+          >
+            <button
+              class="preset-btn active"
+              data-preset="rain"
+              role="tab"
+              aria-selected="true"
+              data-i18n="compare.presetRain"
+            >
+              Vanilla vs. Rain &amp; Wet Puddles
+            </button>
+            <button
+              class="preset-btn"
+              data-preset="snow"
+              role="tab"
+              aria-selected="false"
+              data-i18n="compare.presetSnow"
+            >
+              Vanilla vs. Winter Snow
+            </button>
+            <button
+              class="preset-btn"
+              data-preset="weather"
+              role="tab"
+              aria-selected="false"
+              data-i18n="compare.presetWeather"
+            >
+              Sunny Rays vs. Winter Snow
+            </button>
+          </div>
+
+          <div class="compare-wrapper reveal">
+            <div class="compare-container" id="compare-container">
+              <video
+                class="compare-img compare-after"
+                id="compare-after-video"
+                autoplay
+                loop
+                muted
+                playsinline
+                poster="assets/screenshots/shader-rain.jpg"
+              >
+                <source src="assets/videos/Rainny.mp4" type="video/mp4" />
+              </video>
+              <img
+                src="assets/screenshots/shader-rain.jpg"
+                alt="After: ProTanki Pack Rain and Wet Reflections"
+                class="compare-img compare-after is-hidden"
+                id="compare-after-img"
+                draggable="false"
+              />
+              <div class="compare-before-wrap" id="compare-before-wrap">
+                <video
+                  class="compare-img compare-before"
+                  id="compare-before-video"
+                  autoplay
+                  loop
+                  muted
+                  playsinline
+                  poster="assets/screenshots/vanilla-sandbox.jpg"
+                >
+                  <source src="assets/videos/Default.mp4" type="video/mp4" />
+                </video>
+                <img
+                  src="assets/screenshots/vanilla-sandbox.jpg"
+                  alt="Before: Vanilla ProTanki"
+                  class="compare-img compare-before is-hidden"
+                  id="compare-before-img"
+                  draggable="false"
+                />
+              </div>
+              <span class="compare-label label-left" id="compare-label-left"
+                >Vanilla HTML5</span
+              >
+              <span class="compare-label label-right" id="compare-label-right"
+                >Rain + Puddle Reflections</span
+              >
+              <div class="compare-divider" id="compare-divider">
+                <div class="compare-handle" aria-hidden="true">
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.2"
+                  >
+                    <polyline points="15 18 9 12 15 6" />
+                  </svg>
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.2"
+                  >
+                    <polyline points="9 18 15 12 9 6" />
+                  </svg>
+                </div>
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="100"
+                value="50"
+                class="compare-range"
+                id="compare-range"
+                aria-label="Before and after comparison slider"
+              />
+            </div>
+          </div>
+
+          <div class="feature-media-grid reveal">
+            <article class="feature-media-card">
+              <div class="feature-media-frame">
+                <img
+                  src="assets/screenshots/pack-menu-f8.jpg"
+                  alt="ProTanki Pack In-Game F8 Menu"
+                  id="pack-menu-img"
+                  class="js-lightbox-trigger"
+                  data-caption="ProTanki Pack in-game overlay menu (F8) — Bloom, DoF, Weather, Reflections, Skyboxes"
+                />
+                <div
+                  class="media-placeholder is-hidden"
+                  id="pack-menu-placeholder"
+                >
+                  <svg
+                    width="32"
+                    height="32"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    aria-hidden="true"
+                  >
+                    <rect x="3" y="3" width="18" height="18" rx="2" />
+                    <circle cx="8.5" cy="8.5" r="1.5" />
+                    <path d="m21 15-5-5L5 21" />
+                  </svg>
+                  <span
+                    class="media-placeholder-title"
+                    data-i18n="packMenu.placeholderTitle"
+                    >Screenshot Placeholder: ProTanki Pack Menu (F8)</span
+                  >
+                  <span
+                    class="media-placeholder-desc"
+                    data-i18n="packMenu.placeholderDesc"
+                    >Capture an in-game HTML5 screenshot with the F8 ProTanki
+                    Pack overlay open over a map.</span
+                  >
+                  <code class="media-placeholder-path"
+                    >assets/screenshots/pack-menu-f8.jpg</code
+                  >
+                </div>
+              </div>
+              <div class="feature-media-body">
+                <span class="bento-tag" data-i18n="packMenu.tag"
+                  >IN-GAME OVERLAY (F8)</span
+                >
+                <h3 data-i18n="packMenu.title">
+                  Tweak Shaders &amp; Weather Live
+                </h3>
+                <p data-i18n="packMenu.desc">
+                  Press F8 anytime in HTML5 to toggle Bloom, Depth of Field,
+                  Color Grading, Sun Rays, Rain/Snow, puddle reflections, tank
+                  tracks, and custom skyboxes.
+                </p>
+              </div>
+            </article>
+
+            <article class="feature-media-card">
+              <div class="feature-media-frame">
+                <video
+                  class="js-optional-video"
+                  autoplay
+                  loop
+                  muted
+                  playsinline
+                >
+                  <source
+                    src="assets/videos/Noizy%20Paints%20Showcase.mp4"
+                    type="video/mp4"
+                  />
+                </video>
+                <div class="media-placeholder is-hidden">
+                  <svg
+                    width="32"
+                    height="32"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    aria-hidden="true"
+                  >
+                    <polygon points="5 3 19 12 5 21 5 3" />
+                  </svg>
+                  <span
+                    class="media-placeholder-title"
+                    data-i18n="noizyShowcase.placeholderTitle"
+                    >Video Placeholder: Noizy Paints Showcase</span
+                  >
+                  <span
+                    class="media-placeholder-desc"
+                    data-i18n="noizyShowcase.placeholderDesc"
+                    >Record an 8-12s clip showing 3-4 new Noizy Paints (Void
+                    Rift, Event Horizon, Emerald 2.0, Liquid Chrome) on a
+                    tank.</span
+                  >
+                  <code class="media-placeholder-path"
+                    >assets/videos/Noizy Paints Showcase.mp4</code
+                  >
+                </div>
+              </div>
+              <div class="feature-media-body">
+                <span class="bento-tag" data-i18n="noizyShowcase.tag"
+                  >12+ NEW ANIMATED PAINTS</span
+                >
+                <h3 data-i18n="noizyShowcase.title">Noizy Paints Collection</h3>
+                <p data-i18n="noizyShowcase.desc">
+                  Includes Irbis 2.0, Emerald 2.0, Tiger 2.0, Matrix 2.0, Void
+                  Rift, Event Horizon, Liquid Chrome, Aurora Ribbon, Silk, and
+                  Eclipse.
+                </p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="app-showcase">
+        <div class="container">
+          <div class="section-header reveal">
+            <span class="section-kicker" data-i18n="showcase.kicker"
+              >CLEAN INTERFACE</span
+            >
+            <h2 data-i18n="showcase.title">
+              Browse, Filter, and Swap in Seconds
+            </h2>
+            <p data-i18n="showcase.subtitle">
+              Search by skin series, filter by tier or collection, and apply
+              everything in one click.
+            </p>
+          </div>
+
+          <div class="showcase-tabs reveal" role="tablist">
+            <button
+              class="tab-btn active"
+              data-tab="turrets"
+              role="tab"
+              aria-selected="true"
+              data-i18n="showcase.tabTurrets"
+            >
+              Turrets
+            </button>
+            <button
+              class="tab-btn"
+              data-tab="hulls"
+              role="tab"
+              aria-selected="false"
+              data-i18n="showcase.tabHulls"
+            >
+              Hulls
+            </button>
+            <button
+              class="tab-btn"
+              data-tab="paints"
+              role="tab"
+              aria-selected="false"
+              data-i18n="showcase.tabPaints"
+            >
+              Animated Paints
+            </button>
+            <button
+              class="tab-btn"
+              data-tab="shots"
+              role="tab"
+              aria-selected="false"
+              data-i18n="showcase.tabShots"
+            >
+              Shot Effects
+            </button>
+            <button
+              class="tab-btn"
+              data-tab="editors"
+              role="tab"
+              aria-selected="false"
+              data-i18n="showcase.tabEditors"
+            >
+              Props &amp; Editors
+            </button>
+            <button
+              class="tab-btn"
+              data-tab="settings"
+              role="tab"
+              aria-selected="false"
+              data-i18n="showcase.tabSettings"
+            >
+              Settings &amp; Client
+            </button>
+          </div>
+
+          <div class="showcase-panel reveal">
+            <div class="showcase-media">
+              <img
+                src="assets/screenshots/app-turrets.jpg"
+                alt="Texture Swapper Turrets Tab"
+                id="showcase-img"
+                class="js-lightbox-trigger"
+                data-caption="Turrets Tab - Filter by DC, LC, XT, XT HD, Tanki X, and more models"
+              />
+              <div
+                class="media-placeholder is-hidden"
+                id="showcase-placeholder"
+              >
+                <svg
+                  width="34"
+                  height="34"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  aria-hidden="true"
+                >
+                  <rect x="3" y="3" width="18" height="18" rx="2" />
+                  <circle cx="8.5" cy="8.5" r="1.5" />
+                  <path d="m21 15-5-5L5 21" />
+                </svg>
+                <span
+                  class="media-placeholder-title"
+                  id="showcase-placeholder-title"
+                ></span>
+                <span
+                  class="media-placeholder-desc"
+                  id="showcase-placeholder-desc"
+                ></span>
+                <code
+                  class="media-placeholder-path"
+                  id="showcase-placeholder-path"
+                ></code>
+              </div>
+            </div>
+            <div class="showcase-info" id="showcase-info">
+              <span class="bento-tag" id="showcase-tag">TURRETS BROWSER</span>
+              <h3 id="showcase-title">
+                Every Classic &amp; Modern Turret Skin
+              </h3>
+              <p id="showcase-desc">
+                Swap your M3 turret with DC, LC, XT, XT HD and many more models.
+              </p>
+            </div>
+          </div>
+
+          <div class="anim-strip reveal">
+            <div class="anim-strip-media">
+              <img
+                src="assets/screenshots/isida-demonic-snow.jpg"
+                alt="Isida Demonic 3D Animated Skin in Snow"
+                class="js-lightbox-trigger"
+                data-caption="Isida Demonic with 3D Skin Animations + Winter Snow &amp; Bloom shaders"
+                data-i18n-caption="anim.screenshotCaption"
+              />
+            </div>
+            <div class="anim-strip-text">
+              <span class="badge badge-cyan" data-i18n="anim.badge"
+                >3D SKIN ANIMATIONS</span
+              >
+              <h3 data-i18n="anim.title">Models That Actually Move</h3>
+              <p data-i18n="anim.desc1">
+                With Swapper's own 3D animation engine support, supported skins
+                feature real-time animations from geometry-opening covers to
+                spinning barrels.
+              </p>
+              <br />
+              <p data-i18n="anim.desc2">
+                They are all rendered smoothly right inside your browser or
+                HTML5 client. Press F9 anytime in-game to open the 3D Skin
+                Animations menu.
+              </p>
+            </div>
+            <div class="anim-videos-grid">
+              <div class="anim-video-card">
+                <video class="anim-video" autoplay loop muted playsinline>
+                  <source
+                    src="assets/videos/Isida%20DC%20Animation.mp4"
+                    type="video/mp4"
+                  />
+                </video>
+                <div class="anim-video-caption">
+                  <span data-i18n="anim.isidaTitle">Isida DC Animation</span>
+                </div>
+              </div>
+              <div class="anim-video-card">
+                <video class="anim-video" autoplay loop muted playsinline>
+                  <source
+                    src="assets/videos/Hunter%20DC%20Animation.mp4"
+                    type="video/mp4"
+                  />
+                </video>
+                <div class="anim-video-caption">
+                  <span data-i18n="anim.hunterTitle">Hunter DC Animation</span>
+                </div>
+              </div>
+              <div class="anim-video-card">
+                <video
+                  class="anim-video js-optional-video"
+                  autoplay
+                  loop
+                  muted
+                  playsinline
+                >
+                  <source
+                    src="assets/videos/Hammer%20Animation.mp4"
+                    type="video/mp4"
+                  />
+                </video>
+                <div class="media-placeholder is-hidden">
+                  <svg
+                    width="30"
+                    height="30"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    aria-hidden="true"
+                  >
+                    <polygon points="5 3 19 12 5 21 5 3" />
+                  </svg>
+                  <span
+                    class="media-placeholder-title"
+                    data-i18n="anim.hammerPlaceholderTitle"
+                    >Video Placeholder: Hammer SP / IC</span
+                  >
+                  <span
+                    class="media-placeholder-desc"
+                    data-i18n="anim.hammerPlaceholderDesc"
+                    >Record 5-10s of Hammer SP or IC firing/reloading to show
+                    the moving barrel, cover, and gears.</span
+                  >
+                  <code class="media-placeholder-path"
+                    >assets/videos/Hammer Animation.mp4</code
+                  >
+                </div>
+                <div class="anim-video-caption">
+                  <span data-i18n="anim.hammerTitle"
+                    >Hammer SP / IC Animation</span
+                  >
+                </div>
+              </div>
+              <div class="anim-video-card">
+                <video
+                  class="anim-video js-optional-video"
+                  autoplay
+                  loop
+                  muted
+                  playsinline
+                >
+                  <source
+                    src="assets/videos/Smoky%20Twins%20Animation.mp4"
+                    type="video/mp4"
+                  />
+                </video>
+                <div class="media-placeholder is-hidden">
+                  <svg
+                    width="30"
+                    height="30"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    aria-hidden="true"
+                  >
+                    <polygon points="5 3 19 12 5 21 5 3" />
+                  </svg>
+                  <span
+                    class="media-placeholder-title"
+                    data-i18n="anim.smokyPlaceholderTitle"
+                    >Video Placeholder: Smoky VT / Twins TX</span
+                  >
+                  <span
+                    class="media-placeholder-desc"
+                    data-i18n="anim.smokyPlaceholderDesc"
+                    >Record 5-10s of Smoky VT or Twins TX firing to show barrel
+                    recoil and shell ejection.</span
+                  >
+                  <code class="media-placeholder-path"
+                    >assets/videos/Smoky Twins Animation.mp4</code
+                  >
+                </div>
+                <div class="anim-video-caption">
+                  <span data-i18n="anim.smokyTitle"
+                    >Smoky VT / Twins TX Animation</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-alt" id="how-it-works">
+        <div class="container">
+          <div class="section-header reveal">
+            <span class="section-kicker" data-i18n="steps.kicker"
+              >GET STARTED</span
+            >
+            <h2 data-i18n="steps.title">Up and Running in 3 Steps</h2>
+          </div>
+
+          <div class="steps-grid">
+            <div class="step-card reveal">
+              <div class="step-num">01</div>
+              <h3 data-i18n="steps.s1Title">Install &amp; Pick Client</h3>
+              <p data-i18n-html="steps.s1DescHtml">
+                Run <code>TextureSwapper_Setup.exe</code>, choose
+                <strong>HTML5</strong> or <strong>Flash</strong>, and let the
+                app auto-detect your ProTanki cache.
+              </p>
+            </div>
+            <div class="step-card reveal">
+              <div class="step-num">02</div>
+              <h3 data-i18n="steps.s2Title">Pick Skins, Paints &amp; FX</h3>
+              <p data-i18n-html="steps.s2DescHtml">
+                Equip your target items once in-game so they're cached, close
+                ProTanki, then select your preferred skins and ProTanki Pack
+                options.
+              </p>
+            </div>
+            <div class="step-card reveal">
+              <div class="step-num">03</div>
+              <h3 data-i18n="steps.s3Title">Apply &amp; Play</h3>
+              <p data-i18n-html="steps.s3DescHtml">
+                Click <strong>Apply Selected</strong> and launch ProTanki. Want
+                to go back? Hit <strong>Restore Originals</strong> from
+                <strong>Backup History</strong> tab anytime to revert cleanly.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="pricing">
+        <div class="container">
+          <div class="section-header reveal">
+            <span class="section-kicker" data-i18n="pricing.kicker"
+              >LICENSING</span
+            >
+            <h3 data-i18n="pricing.title">
+              Free for everyone. Optional Lifetime Premium.
+            </h3>
+            <p data-i18n-html="pricing.subtitleHtml">
+              Start with the free version or activate a
+              <strong>Free Trial</strong> right inside Settings - no card
+              required.
+            </p>
+          </div>
+
+          <div class="pricing-grid">
+            <div class="price-card reveal">
+              <div class="price-header">
+                <h3 data-i18n="pricing.freeTitle">Free Edition</h3>
+                <div
+                  class="price-amount"
+                  data-i18n-html="pricing.freePriceHtml"
+                >
+                  $0 <span>forever</span>
+                </div>
+                <p data-i18n="pricing.freeSubtitle">
+                  Everything you need to start customizing ProTanki.
+                </p>
+              </div>
+              <ul class="check-list">
+                <li data-i18n="pricing.free1">
+                  Free Hull &amp; Turret skins (Legacy, XT &amp; more)
+                </li>
+                <li data-i18n="pricing.free2">Custom static Paint swapping</li>
+                <li data-i18n="pricing.free3">
+                  HTML5 &amp; Flash client support
+                </li>
+                <li data-i18n="pricing.free4">
+                  ProTanki Pack with a lot of exclusive content
+                </li>
+                <li data-i18n="pricing.free5">
+                  Safe automatic Backups &amp; Restore Originals
+                </li>
+                <li data-i18n="pricing.free6">
+                  English, Russian &amp; Ukrainian UI
+                </li>
+                <li data-i18n="pricing.free7">
+                  Built-in Free Trial button inside Settings
+                </li>
+              </ul>
+              <a
+                href="https://github.com/Gabriel250903/ProTankiTextureSwapper/releases/latest"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="btn btn-secondary btn-block js-download-link"
+                data-i18n="pricing.freeBtn"
+              >
+                Download Free Installer
+              </a>
+            </div>
+
+            <div class="price-card price-featured reveal">
+              <div class="featured-ribbon" data-i18n="pricing.premRibbon">
+                LIFETIME LICENSE
+              </div>
+              <div class="price-header">
+                <h3 data-i18n="pricing.premTitle">Premium Edition</h3>
+                <div
+                  class="price-amount"
+                  data-i18n-html="pricing.premPriceHtml"
+                >
+                  €10 <span>one-time</span>
+                </div>
+                <p data-i18n="pricing.premSubtitle">
+                  Unlock the 3D Skin Animations, exclusive skins, and advanced
+                  editors.
+                </p>
+              </div>
+              <ul class="check-list">
+                <li data-i18n-html="pricing.prem1Html">
+                  <strong>3D Skin Animations</strong>: Activate and customize
+                  skins like Isida Demonic, Hammer IC, and more through the
+                  built-in ProTanki Pack.
+                </li>
+                <li data-i18n-html="pricing.prem2Html">
+                  <strong>Full Animated Paints library</strong>
+                </li>
+                <li data-i18n="pricing.prem3">
+                  Exclusive Tanki X, XT HD &amp; Demonic skins
+                </li>
+                <li data-i18n="pricing.prem4">
+                  Custom and Classic 2010 Shot Effects, Props Editor &amp; Dust
+                  Editor
+                </li>
+              </ul>
+              <div class="price-actions">
+                <a
+                  href="https://flytoxp.gumroad.com/l/mfdjom"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="btn btn-primary btn-block"
+                  data-i18n="pricing.premBuyBtn"
+                >
+                  Buy on Gumroad (Instant Delivery)
+                </a>
+                <a
+                  href="https://discord.gg/3Bgs7Jd9xk"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="btn btn-ghost btn-block"
+                  data-i18n-html="pricing.premDmBtnHtml"
+                >
+                  Or DM <code>noizy3345</code> on Discord
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-alt" id="faq">
+        <div class="container faq-container">
+          <div class="section-header reveal">
+            <span class="section-kicker" data-i18n="faq.kicker">FAQ</span>
+            <h2 data-i18n="faq.title">Frequently Asked Questions</h2>
+          </div>
+
+          <div class="faq-list">
+            <details class="faq-item reveal">
+              <summary data-i18n="faq.q1">
+                Is Texture Swapper safe to use?
+              </summary>
+              <p data-i18n="faq.a1">
+                The Texture Swapper is safe to use. It modifies local client
+                cache files only and it never touches game executables or server
+                data. All visual changes are 100% client-side and visible only
+                on your machine.
+              </p>
+            </details>
+            <details class="faq-item reveal">
+              <summary data-i18n="faq.q2">
+                Which ProTanki clients are supported in v4.0?
+              </summary>
+              <p data-i18n-html="faq.a2Html">
+                Both! v4.0 introduces full <strong>HTML5 client</strong> support
+                (alongside the existing <strong>Flash</strong> client). You can
+                switch between them anytime in Settings.
+              </p>
+            </details>
+            <details class="faq-item reveal">
+              <summary data-i18n="faq.q3">
+                How do I revert back to the original game textures?
+              </summary>
+              <p data-i18n-html="faq.a3Html">
+                Close ProTanki, open Texture Swapper, and click
+                <strong>Restore Originals</strong> from the
+                <strong>Backup History</strong> window. Your backed-up original
+                cache files are restored cleanly.
+              </p>
+            </details>
+            <details class="faq-item reveal">
+              <summary data-i18n="faq.q4">
+                What are the system requirements?
+              </summary>
+              <p data-i18n-html="faq.a4Html">
+                Windows 10 or Windows 11 (64-bit), the
+                <a
+                  href="https://dotnet.microsoft.com/en-us/download/dotnet/8.0"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >.NET 8.0 Desktop Runtime</a
+                >, and an official ProTanki client installation.
+              </p>
+            </details>
+            <details class="faq-item reveal">
+              <summary data-i18n="faq.q5">
+                Can I test Premium features before buying?
+              </summary>
+              <p data-i18n-html="faq.a5Html">
+                Yes! You can activate a free 3 days trial directly inside the
+                <strong>Settings</strong>
+                window in the app with no credit card required.
+              </p>
+            </details>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container footer-inner">
+        <div class="footer-brand">
+          <img
+            src="assets/logo.png"
+            alt="Texture Swapper Logo"
+            class="brand-logo"
+          />
+          <div>
+            <strong data-i18n="footer.title">ProTanki Texture Swapper</strong>
+            <p class="disclaimer" data-i18n="footer.disclaimer">
+              Client-side visual modding utility. Not affiliated with ProTanki.
+            </p>
+          </div>
+        </div>
+        <div class="footer-links">
+          <a
+            href="https://github.com/Gabriel250903/ProTankiTextureSwapper"
+            target="_blank"
+            rel="noopener noreferrer"
+            data-i18n="footer.github"
+            >GitHub</a
+          >
+          <a
+            href="https://github.com/Gabriel250903/ProTankiTextureSwapper/releases"
+            target="_blank"
+            rel="noopener noreferrer"
+            data-i18n="footer.releases"
+            >Releases</a
+          >
+          <a
+            href="https://discord.gg/3Bgs7Jd9xk"
+            target="_blank"
+            rel="noopener noreferrer"
+            data-i18n="footer.discord"
+            >Discord</a
+          >
+        </div>
+      </div>
+    </footer>
+
+    <div
+      class="lightbox"
+      id="lightbox"
+      role="dialog"
+      aria-modal="true"
+      aria-hidden="true"
+    >
+      <button
+        class="lightbox-close"
+        id="lightbox-close"
+        aria-label="Close preview"
+      >
+        &times;
+      </button>
+      <img src="" alt="" id="lightbox-img" />
+      <p id="lightbox-caption"></p>
+    </div>
+
+    <script src="i18n.js"></script>
+    <script src="script.js"></script>
   </body>
 </html>
